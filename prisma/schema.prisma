@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(191) // Wajib diisi
+  description String?  @db.Text
+  price       Float    // Harga, menggunakan Float
+  stock       Int      @default(0) // Jumlah stok
+  imageUrl    String?  // URL gambar produk
+  category    String?
+  isFeatured  Boolean  @default(false) // Untuk produk unggulan di Home
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Model untuk Halaman "Promo"
+model Promo {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255) // Judul promo
+  description String?  @db.Text
+  startDate   DateTime
+  endDate     DateTime // Penting untuk logika kedaluwarsa
+  imageUrl    String?
+  isActive    Boolean  @default(true) // Status aktif
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Model untuk Halaman "Berita"
+model News {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  content     String   @db.Text // Isi berita
+  author      String?
+  imageUrl    String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
